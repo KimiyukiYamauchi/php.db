@@ -5,7 +5,7 @@ try {
 		'staff', 'password');
 	
 	$sql=$pdo->prepare('select * from product where name like ?');
-	$ret = $sql->execute(['%' . $_REQUEST['keyword'] . '%']);
+	$ret = $sql->execute(['%' . $_POST['keyword'] . '%']);
 } catch (PDOException $e) {
 	exit('エラー' . $e->getMessage());
 }
@@ -15,9 +15,9 @@ if ($ret) {
 		echo '<tr><th>商品番号</th><th>商品名</th><th>商品価格</th></tr>' . PHP_EOL;
 		while ($row = $sql->fetch()) {
 			echo '<tr>';
-			echo '<td>', $row['id'], '</td>';
-			echo '<td>', $row['name'], '</td>';
-			echo '<td>', $row['price'], '</td>';
+			echo '<td>', htmlspecialchars($row['id']), '</td>';
+			echo '<td>', htmlspecialchars($row['name']), '</td>';
+			echo '<td>', htmlspecialchars($row['price']), '</td>';
 			echo '</tr>';
 			echo "\n";
 		}

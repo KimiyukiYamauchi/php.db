@@ -7,10 +7,10 @@ try {
 	$ret = false;
 	if (empty($_POST['name'])) {
 		echo '<p>商品名を入力してください。</p>';
-	} else if (!preg_match('/[0-9]+/', $_REQUEST['price'])) {
+	} else if (!preg_match('/[0-9]+/', $_POST['price'])) {
 		echo '<p>商品価格を整数で入力してください。</p>';
 	} else {
-		$ret = $sql->execute([htmlspecialchars($_REQUEST['name']), $_REQUEST['price']]);
+		$ret = $sql->execute([htmlspecialchars($_POST['name']), $_POST['price']]);
 	}
 } catch (PDOException $e) {
 	exit('エラー：' . $e->getMessage());
