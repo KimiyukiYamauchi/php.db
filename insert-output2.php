@@ -1,16 +1,22 @@
 <?php require './header.php'; ?>
 <?php
 try {
+	// PDOインスタンスの作成(DBへの接続)
 	$pdo=new PDO('mysql:host=localhost;dbname=shop;charset=utf8', 
 		'staff', 'password');
-	$sql=$pdo->prepare('insert into product values(null, ?, ?)');
+	// プリペアードステートメントを作成
+	$stmt = $pdo->prepare('insert into product values(null, :name, :price)');
 	$ret = false;
 	if (empty($_POST['name'])) {
 		echo '<p>商品名を入力してください。</p>';
 	} else if (!preg_match('/[0-9]+/', $_POST['price'])) {
 		echo '<p>商品価格を整数で入力してください。</p>';
 	} else {
-		$ret = $sql->execute([htmlspecialchars($_POST['name']), $_POST['price']]);
+		// プリペアードステートメントにパラメータを割り当てる
+		$stmt->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
+		$stmt->bindParam(':price', $_POST['price'], PDO::PARAM_INT);
+		// SQLを実行
+		$ret = $stmt->execute();
 	}
 } catch (PDOException $e) {
 	exit('エラー：' . $e->getMessage());

@@ -1,10 +1,16 @@
 <?php require './header.php'; ?>
 <?php
 try {
+	// PDOインスタンスの作成(DBへの接続)
 	$pdo=new PDO('mysql:host=localhost;dbname=shop;charset=utf8', 
 	'staff', 'password');
-	$sql=$pdo->prepare('insert into product values(null, ?, ?)');
-	$ret = $sql->execute([$_POST['name'], $_REQUEST['price']]);
+	// プリペアードステートメントを作成
+	$stmt = $pdo->prepare('insert into product values(null, :name, :price)');
+	// プリペアードステートメントにパラメータを割り当てる
+	$stmt->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
+	$stmt->bindParam(':price', $_POST['price'], PDO::PARAM_INT);
+	// SQLを実行
+	$ret = $stmt->execute();
 } catch (PDOException $e) {
 	exit('エラー：' . $e->getMessage());
 }
